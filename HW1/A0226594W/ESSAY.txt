@@ -1,0 +1,27 @@
+1. 
+I expect token-based ngram models to perform better. This is because languages have common phrases that are used often. However, word based ngram models might perform worse on data that has a lot of typos. 
+"I go to school" vs "I go to shcool" could be a potential failure.
+However, I would still use character-based ngram model, as they require less space, especially for 4gram models.
+
+2. 
+More data would make the model slightly slower but more robust. However, we need to ensure that the data split is even among the 3 langauges.
+If we get only more indonesian data, I would expect the model to start classifying all text as indonesian. This is because of
+data imbalance, all languages will end up having some similar 4grams. To counter this, some form of data processing needs to 
+be done. A better smoothing method needs to be used.
+
+3. 
+Stripping out punctuation and numbers is a standard practice in NLP. I think that while it helps normally, our dataset is 
+too small for there to be any noticeable difference. I did try converting everything to lower case, that had no effect on model 
+performance, bit I suspect it is due to the training and testing sets being small. I think that converting to lower case will
+definitely help model performance with higher data.
+
+4. 
+As discussed in the lecture, increasing the ngram size will improve model performance. However, the space requirements grow
+exponentially.
+However, I believe that N should be within reason. If N is too large, we might not be able to classify small phrases.
+For example: N = 7
+input: Do it!
+The length of the input is < N, so this input might end up getting misclassified if we don't add START and END tokens.
+
+I expect the performance to rise with N, reach a maxima and start reducing as the model starts overfitting.
+(I don't know how to show the graph in a text file, but I can provide clarification via email if needed: e0638880@u.nus.edu)

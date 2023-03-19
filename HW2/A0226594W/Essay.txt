@@ -1,0 +1,29 @@
+1) You will observe that a large portion of the terms in the dictionary are numbers. 
+However, we normally do not use numbers as query terms to search. Do you think it is a good idea to remove these 
+number entries from the dictionary and the postings lists? Can you propose methods to normalize these numbers? 
+How many percentage of reduction in disk storage do you observe after removing/normalizing these numbers?
+
+Yes, I think it would be a good idea to remove some of the numbers. Any token that comprises of just numbers should be 
+removed. However, sometimes you can have terms like "oneplus10", "mac m1", "file v2" where numbers could be important.
+Based on my personal experimentation, there is a reduction of around 30% once numbers are reduced.
+
+2) What do you think will happen if we remove stop words from the dictionary and postings file? How does it affect 
+the searching phase?
+
+The removal of stopwords will reduce the size of storage. However, in the event that the search query 
+involves a stop word, then the system will not be able to retrieve the results for it. (Rule of law, rule by law example
+from the lecture)
+
+3) The NLTK tokenizer may not correctly tokenize all terms. What do you observe from the resulting terms produced by 
+sent_tokenize() and word_tokenize()? Can you propose rules to further refine these results?
+
+sent_tokenize() splits a text into sentences based on punctuation marks such as period, question mark, and 
+exclamation mark. However, it cannot always handle complex sentence structures or abbreviations properly.
+
+Sentences that end with abbreviations (e.g., "Dr.", "Mr.") or numbers (e.g., "3.14") should be treated as part 
+of the same sentence rather than being split into multiple sentences.
+
+word_tokenize() splits a sentence into individual words based on whitespace and punctuation marks. It is able to do it 
+correctly of the time. However, it cannot always handle hyphenated words and contractions properly.
+Hyphenated words should be treated as a single token (e.g., "well-being" should not be split into "well" and "being").
+Contractions should be treated as a single token (e.g., "don't" should not be split into "do" and "n't").
