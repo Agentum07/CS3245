@@ -1,12 +1,6 @@
 #!/usr/bin/python3
-import re
-import nltk
-import sys
-import getopt
-import os
 from nltk import sent_tokenize, word_tokenize
 from nltk.stem.porter import PorterStemmer
-import time
 from math import log, pow, sqrt
 import pickle
 from collections import defaultdict

@@ -1,14 +1,10 @@
-#!/usr/bin/python3
-import re
-import nltk
+#!/usr/bin/python
 import sys
 import getopt
 import os
 from nltk import sent_tokenize, word_tokenize
 from nltk.stem.porter import PorterStemmer
 import time
-import math
-import pickle
 from collections import defaultdict
 import util
 
@@ -32,7 +28,7 @@ def build_index(in_dir, out_dict, out_postings):
     build index from documents stored in the input directory,
     then output the dictionary file and postings file
     """
-    in_dir = "/Users/a65888/nltk_data/corpora/reuters/training/"
+    # in_dir = "/Users/a65888/nltk_data/corpora/reuters/training/"
     reset_dir(out_dict, out_postings, 'doc_lengths.txt')
     start_time = time.perf_counter()
 
