@@ -1,0 +1,3 @@
+copper AND nickel
+gold AND platinum
+(copper AND nickel) OR (gold AND platinum)

@@ -233,7 +233,7 @@ def build_index(in_dir, out_dict, out_postings):
     then output the dictionary file and postings file
     """
     print('indexing...')
-    # in_dir = "/Users/nltk_data/corpora/reuters/training/"
+    in_dir = "/Users/a65888/nltk_data/corpora/reuters/training/"
 
     stemmer = PorterStemmer()
     dictionary = set()

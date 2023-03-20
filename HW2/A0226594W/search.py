@@ -25,8 +25,8 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     query_results = []
     for query in queries:
         result = evaluate_query(query, doc_ids, dictionary, postings_file)
-        print("-=--=-=-=--=----=-=----=-=-=--=-=-=--=-=")
-        print(result)
+        # print("-=--=-=-=--=----=-=----=-=-=--=-=-=--=-=")
+        # print(result)
         query_results.append(result)
     
     text = ""
@@ -69,9 +69,9 @@ def load_dict(dict_file):
 def load_posting_list(postings_file, offset):
     postings = open(postings_file, 'r')
     postings.seek(0)
-    postings.seek(offset)
     posting_list = []
     try:
+        postings.seek(offset)
         posting_string_list =  postings.readline().rstrip("\n").split(" ")[1:] # get posting list for term
         for values in posting_string_list:
             split_val = values.split("|")
@@ -145,10 +145,12 @@ def evaluate_query(query, doc_ids, dictionary, postings_file):
     # Base cases
     # A
     if (len(tokens) == 1):
-        final_result = load_posting_list(postings_file, dictionary[tokens[0]])
+        if tokens[0] in dictionary:
+            final_result = load_posting_list(postings_file, dictionary[tokens[0]])
     # NOT A
     elif len(tokens) == 2:
-        final_result = eval_not(load_posting_list(postings_file, dictionary[tokens[1]]), doc_ids)
+        if tokens[1] in dictionary:
+            final_result = eval_not(load_posting_list(postings_file, dictionary[tokens[1]]), doc_ids)
     # Multi term multi operation query
     else:
         ands, ors = set(), set()
@@ -158,7 +160,7 @@ def evaluate_query(query, doc_ids, dictionary, postings_file):
         i = 0
         while i < len(tokens):
             token = tokens[i]
-            print(token, "| AND:", is_and, "OR:", is_or, "NOT:", is_not)
+            # print(token, "| AND:", is_and, "OR:", is_or, "NOT:", is_not)
             # create a query token class
             if token not in [Token.AND, Token.OR, Token.NOT, Token.LB, Token.RB]:
                 if is_not:
@@ -193,7 +195,13 @@ def evaluate_query(query, doc_ids, dictionary, postings_file):
                 is_or = True
 
             elif token == Token.NOT:
-                is_not = True
+                # query is => NOT NOT A which is equivalent to A
+                if is_not:
+                    is_not = False
+                    sub_query = tokens[i + 1]
+                    sub_query_result = build_skip_list(evaluate_query(sub_query, doc_ids, dictionary, postings_file))
+                else:
+                    is_not = True
             
             # reached a subquery
             elif token == Token.LB:
@@ -205,7 +213,7 @@ def evaluate_query(query, doc_ids, dictionary, postings_file):
 
                 sub_query = ' '.join(tokens[i + 1 : end_index])
                 sub_query_result = build_skip_list(evaluate_query(sub_query, doc_ids, dictionary, postings_file))
-                print("Evaluated subquery", sub_query, "length: ", len(sub_query_result))
+                # print("Evaluated subquery", sub_query, "length: ", len(sub_query_result))
                 if starting_operation == "":
                     first_token_result = sub_query_result
 
@@ -243,7 +251,6 @@ def evaluate_query(query, doc_ids, dictionary, postings_file):
             # print("After token", token, "ands:", len(ands), "ors", len(ors))
             i += 1
         
-
 
         # evaluate all ands
         final_ands = intersection(ands)
@@ -381,7 +388,7 @@ dictionary_file = postings_file = file_of_queries = output_file_of_results = Non
 
 # dictionary = load_dict('dictionary.txt')
 # doc_ids = load_doc_ids('doc_ids.txt')
-# evaluate_query("(not japan)", doc_ids, dictionary, 'postings.txt')
+# print(evaluate_query("(copper AND nickel) OR (gold AND platinum)", doc_ids, dictionary, 'postings.txt'))
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], 'd:p:q:o:')
